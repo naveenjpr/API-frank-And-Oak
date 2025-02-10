@@ -1,13 +1,39 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const TaabingSchema = new mongoose.Schema({
-  category: { type: String, required: true, enum: ["men", "women"] },
-  heading: { type: String, required: true },
-  frontImage: { type: String, required: true },  // URL or local path
-  backImage: { type: String, required: true },
-  price: { type: Number, required: true },
-  color: { type: String, required: true },
-  size: { type: [String], required: true }, // Array of sizes
-});
+  category: { type: String, enum: ["men", "women"] },
 
-module.exports = mongoose.model("Tabing_men_women", TaabingSchema);
+  color: { type: String },
+  size: { type: [String] },
+
+  frontImage: { type: String }, // URL or local path
+  backImage: { type: String },
+  heading: {
+    type: String,
+  },
+  status: {
+    type: Boolean,
+    default: true,
+  },
+
+  price: {
+    type: Number,
+    required: [true, "clothe price required in number"],
+  },
+
+ 
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
+  deleted_at: {
+    type: Date,
+    default: "",
+  },
+})
+
+module.exports = mongoose.model("Tabing_men_women", TaabingSchema)

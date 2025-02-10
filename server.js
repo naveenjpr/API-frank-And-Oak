@@ -22,6 +22,7 @@ server.get("/", (request, response) => {
 require("./src/routes/backend/Featured_Categories.routes")(server)
 require("./src/routes/backend/women.slider.routes")(server)
 require("./src/routes/backend/men.slider.routes")(server)
+require("./src/routes/backend/Tapbing.routes")(server)
 server.get("*", (request, response) => {
   response.send("Page not found.....")
 })
