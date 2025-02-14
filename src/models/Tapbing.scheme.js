@@ -3,8 +3,24 @@ const mongoose = require("mongoose")
 const TaabingSchema = new mongoose.Schema({
   category: { type: String, enum: ["men", "women"] },
 
-  color: { type: String },
-  size: { type: [String] },
+  color: {
+    type: String,
+    enum: [
+      "Orange",
+      "Purple",
+      "Brown",
+      "Gray",
+      "Pink",
+      "Yellow",
+      "Green",
+      "White",
+      "Black",
+      "Blue",
+      "Red",
+    ],
+  },
+
+  size: { type: String, enum: ["S", "M", "L", "XL", "XXL"] },
 
   frontImage: { type: String }, // URL or local path
   backImage: { type: String },
@@ -17,11 +33,10 @@ const TaabingSchema = new mongoose.Schema({
   },
 
   price: {
-    type: Number,
-    required: [true, "clothe price required in number"],
+    type: String,
+    // required: [true, "clothe price required in number"],
   },
 
- 
   created_at: {
     type: Date,
     default: Date.now,

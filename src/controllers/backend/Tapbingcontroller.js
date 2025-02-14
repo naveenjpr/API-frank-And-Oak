@@ -122,6 +122,163 @@ exports.view = async (request, response) => {
   }
 }
 
-// exports.update = async (request, response) => {}
+exports.update = async (request, response) => {
+  // console.log(request.file)
+  
+  data = {
+    category: request.body.category,
+    color: request.body.color,
+    size: request.body.size,
+    frontImage: request.body.frontImage,
+    backImage: request.body.backImage,
+    heading: request.body.heading,
+    price: request.body.price,
+    status: request.body.status ?? 1,
+  }
 
-// exports.delete = async (request, response) => {}
+  await Tabing_men_womenes
+    .updateOne(
+      {
+        _id: request.body.id,
+      },
+      {
+        $set: data,
+      }
+    )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record update succussfully",
+        data: result,
+      }
+
+      response.send(res)
+    })
+    .catch((error) => {
+      var error_messages = []
+
+      for (let field in error.errors) {
+        // console.log(field);
+        error_messages.push(error.errors[field].message)
+      }
+
+      var res = {
+        status: false,
+        message: "Something went wrong",
+        error_messages: error_messages,
+      }
+
+      response.send(res)
+    })
+}
+exports.details = async(request,response) => {
+    
+  var condition = {
+      deleted_at : null
+  }
+
+  await Tabing_men_womenes.findById(request.params.id).then((result) => {
+      if(result != ''){
+          var res = {
+              status : true,
+              message : 'Record found successfully !!',
+              data : result
+          }
+      
+          response.send(res);
+      } else {
+          var res = {
+              status : false,
+              message : 'No Record found !!',
+              data : ''
+          }
+      
+          response.send(res);
+      }
+  }).catch((error) => {
+      var res = {
+          status : false,
+          message : 'Something went wrong !!',
+      }
+  
+      response.send(res);
+  });
+}
+exports.delete = async (request, response) => {
+  try {
+    const { id } = request.params // Use params instead of body
+
+    const productData = await Tabing_men_womenes.findOne({
+      _id: id,
+      deleted_at: null,
+    })
+
+    if (!productData) {
+      return response.send({
+        status: false,
+        message: "Record not found",
+      })
+    }
+
+    await Tabing_men_womenes.updateOne(
+      { _id: id },
+      { $set: { deleted_at: Date.now() } }
+    )
+
+    return response.send({
+      status: true,
+      message: "Record deleted successfully!!",
+    })
+  } catch (error) {
+    return response.send({
+      status: false,
+      message: "Something went wrong",
+      error: error.message, // Send error details for debugging
+    })
+  }
+}
+
+exports.changeStatus = async (request, response) => {
+  const TabingData = await Tabing_men_womenes.findOne({
+    _id: request.body.id,
+  })
+
+  // console.log(TabingData.length);
+
+  if (TabingData == null) {
+    var res = {
+      status: false,
+      message: "Id not match in the database",
+    }
+
+    response.send(res)
+  }
+
+  await Tabing_men_womenes.updateOne(
+    {
+      _id: request.body.id,
+    },
+    {
+      $set: {
+        status: request.body.status,
+      },
+    }
+  )
+    .then((result) => {
+      var res = {
+        status: true,
+        message: "Record update succussfully",
+        data: result,
+      }
+
+      response.send(res)
+    })
+    .catch((error) => {
+      var res = {
+        status: false,
+        message: "Something went wrong",
+      }
+
+      response.send(res)
+    })
+}
